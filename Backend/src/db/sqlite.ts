@@ -5,7 +5,6 @@ export const db = new Database("chat.db");
 db.exec(`
 CREATE TABLE IF NOT EXISTS conversations (
     id TEXT PRIMARY KEY,
-    session_id TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -1,5 +1,4 @@
-// eslint-disable-next-line
-/// <reference types="sprint-scripts" />
+/// <reference types="vite/client" />
 
 declare module '*.mp3' {
   const src: string

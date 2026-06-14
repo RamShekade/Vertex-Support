@@ -1,9 +1,9 @@
 
 export interface chatRequest{
-    sessionId?: string,
+    conversationId?: string,
     message: string
 }
 export interface chatResponse{
-    sessionId: string,
+    conversationId: string,
     message: string
 }

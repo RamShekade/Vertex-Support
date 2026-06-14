@@ -1,29 +1,25 @@
 import { randomUUID } from "crypto";
 import { db } from "../db/sqlite";
-import { AIMessage } from "../models/message";
-import { conversation } from "../models/conversation";
-import { AIMessageRole } from "../models/message";
+import { AIMessage } from "../../../models/message";
+import { conversation } from "../../../models/conversation";
+import { AIMessageRole } from "../../../models/message";
 
 class ConversationRepository {
 
-    createConversation(
-        sessionId: string
-    ): string {
+    createConversation(): string {
 
         const conversationId = randomUUID();
 
         const stmt = db.prepare(`
             INSERT INTO conversations (
-                id,
-                session_id
+                id
             )
-            VALUES (?, ?)
+            VALUES (?)
         `);
 
         stmt.run(
-            conversationId,
-            sessionId
-        );
+            conversationId
+        );  
 
         return conversationId;
     }
