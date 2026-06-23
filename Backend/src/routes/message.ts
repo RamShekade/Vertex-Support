@@ -1,22 +1,20 @@
 import  Express  from "express";
-import { chatRequest } from "../../../models/api/createChat";
+import { chatRequest, chatResponse } from "../../../models/api/createChat";
 import { processMessage } from "../services/processMessage";
-import { AIMessage } from "../../../models/message";
-import { getConversationMessages } from "../services/conversationData";
+import { AppError } from "../../../models/Errors";
 
 const router = Express.Router();
 
 router.post("/message", async (req, res) => {
+    console.log("Received request body:", req.body);
     const request = req.body as chatRequest;
-    if (!request.message) {
-        return res.status(400).json({ error: "Message is required" });
-    }
+    console.log("Parsed request:", request);
     
     try {
-        const result = await processMessage(request);
+        const result: chatResponse = await processMessage(request);
         return res.json(result);
     } catch (error) {
-        return res.status(500).json({ error: "Failed to process message" });
+        throw error as AppError;
     }
 
 }); 

@@ -7,7 +7,7 @@ const MAX_LENGTH = 5000;
 const repo = new ConversationRepository();
 
 function PreProcessMessages(message: string): string {
-
+    
     if (!message?.trim()) throw new Error("Message cannot be empty");
     
     const trimmedMessage = message.trim().replace(/\s+/g, " ");
@@ -18,7 +18,7 @@ function PreProcessMessages(message: string): string {
     return trimmedMessage;
 }
 
-export async function processMessage(request: chatRequest): Promise<{ conversationId: string; response: string; }> {
+export async function processMessage(request: chatRequest): Promise<{ conversationId: string; message: string; }> {
 
     const { conversationId, message } = request;
     const preProcessedMessage = PreProcessMessages(message);
@@ -38,6 +38,6 @@ export async function processMessage(request: chatRequest): Promise<{ conversati
 
     return {
         conversationId: conversationId || newConversationId,
-        response,
+        message: response
     };
 }

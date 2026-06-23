@@ -9,8 +9,6 @@ export function getConversationMessages(sessionId: string) {
     return repo.getMessages(sessionId);
 }
 
-
 export function getAllConversations() {
     return repo.getConversations();
 }
-

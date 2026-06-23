@@ -1,4 +1,4 @@
-import { conversation } from "../conversation";
+import { AIMessage } from "models/message";
 
 export interface getConversationsRequest{
     conversationId: string;
@@ -6,5 +6,5 @@ export interface getConversationsRequest{
 
 export interface getConversationsResponse {
     conversationId: string;
-    conversation: conversation[];
+    messages: AIMessage[];
 }

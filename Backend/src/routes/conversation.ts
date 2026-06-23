@@ -7,7 +7,7 @@ const conversationRouter = Express.Router();
 conversationRouter.get("/conversations", async (req, res) => {
     try {
         const response: conversation[] = getAllConversations(); 
-        res.json(response);
+        res.json({ conversations: response });
     }   
     catch (error) {
         console.error("Error fetching conversation:", error);
@@ -23,7 +23,7 @@ conversationRouter.get("/conversation/:conversationId", async (req, res) => {
             res.status(404).json({ error: "Conversation not found" });
             return;
         }
-        res.json(response);
+        res.json({ messages: response });
     } catch (error) {
         console.error("Error fetching conversation:", error);
         res.status(500).json({ error: "Failed to fetch conversation" });
