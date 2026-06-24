@@ -1,28 +1,47 @@
+import axios from "axios";
 import { ErrorCode } from "models/Errors";
 
 export const getErrorMessage = (error: unknown): string => {
     console.error("Error caught:", error);
-    if (typeof error === 'object' && error !== null && 'code' in error) {
-        const appError = error as { code: ErrorCode; message: string };
+
+    if (axios.isAxiosError(error)) {
+
+        const appError = error.response?.data as {
+            code: ErrorCode;
+            message: string;
+        } | undefined;
+
+        if (!appError) {
+            return error.message;
+        }
+        console.error("AppError details:", appError);
+
         switch (appError.code) {
             case ErrorCode.InvalidRequest:
-                return 'The request was invalid. Please check your input and try again.';
+                return "The request was invalid. Please check your input.";
+
             case ErrorCode.InternalError:
-                return 'An internal error occurred. Please try again later.';
+                return "An internal error occurred. Please try again later.";
+
             case ErrorCode.ConversationNotFound:
-                return 'The requested conversation was not found.';
+                return "The requested conversation was not found.";
+
             case ErrorCode.InvalidApiKey:
-                return 'The API key provided is invalid. Please check your configuration.';
+                return "The API key provided is invalid.";
+
             case ErrorCode.RateLimitExceeded:
-                return 'You have exceeded the rate limit. Please wait and try again.';
+                return "You have exceeded the rate limit. Please wait and try again.";
+
             case ErrorCode.ServiceUnavailable:
-                return 'The service is currently unavailable. Please try again later.'; 
+                return "The service is currently unavailable.";
+
             case ErrorCode.ServiceTemporarilyUnavailable:
-                return 'The service is temporarily unavailable. Please try again later.';
+                return "The service is temporarily unavailable.";
+
             default:
-                return 'An unknown error occurred. Please try again.';
-        }   
+                return appError.message;
+        }
     }
 
-    return 'An unexpected error occurred. Please try again.';
-}
+    return "An unexpected error occurred.";
+};

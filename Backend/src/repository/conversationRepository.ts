@@ -80,12 +80,24 @@ class ConversationRepository {
             ORDER BY created_at DESC
         `);
 
-        const rows = stmt.all() as any[];
 
-        return rows.map(r => ({
-            id: r.id,
-            createdAt: new Date(r.created_at)
-        } as conversation));
+        const rows = stmt.all() as any[];
+        const firstMessageStmt = db.prepare(`
+            SELECT message
+            FROM messages
+            WHERE conversation_id = ?
+            ORDER BY created_at ASC
+            LIMIT 1
+        `);
+
+        return rows.map(r => {
+            const firstMessageRow = firstMessageStmt.get(r.id) as any;
+            return {
+                id: r.id,
+                createdAt: new Date(r.created_at),
+                firstMessage: firstMessageRow ? firstMessageRow.message : ""
+            } as conversation;
+        });
     }
 }
 

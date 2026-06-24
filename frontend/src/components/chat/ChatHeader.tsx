@@ -6,7 +6,6 @@ type Props = {
 
 const ChatHeader = ({ sessionId, isSidebarOpen, onToggleSidebar }: Props) => (
   <header className="flex shrink-0 items-center gap-3 border-b border-gray-100 bg-white px-4 py-3.5">
-    {/* Sidebar toggle */}
     <button
       type="button"
       onClick={onToggleSidebar}
@@ -24,24 +23,12 @@ const ChatHeader = ({ sessionId, isSidebarOpen, onToggleSidebar }: Props) => (
       )}
     </button>
 
-    {/* Avatar */}
     <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-pink-200 bg-pink-50 text-sm font-semibold text-pink-500">
       S
     </div>
 
-    {/* Info */}
     <div className="min-w-0 flex-1">
-      <p className="text-[14px] font-semibold text-gray-900">Support agent</p>
-      <p className="flex items-center gap-1.5 text-[11px] text-gray-400">
-        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-green-400" />
-        Online
-        {sessionId && (
-          <>
-            <span className="text-gray-300">·</span>
-            <span className="truncate font-mono">{sessionId}</span>
-          </>
-        )}
-      </p>
+      <p className="text-[14px] font-semibold text-gray-900">Spur's Vertex</p>
     </div>
   </header>
 )

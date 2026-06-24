@@ -14,6 +14,7 @@ export const sendChatMessage = async (
 
   const response = await axios.post(`${API_BASE_URL}/message`, { ...request })
   const data = response.data as chatResponse;
+  
   return {
     conversationId: data.conversationId,
     message: data.message
@@ -27,6 +28,7 @@ export const getConversationMessages = async (
     `${API_BASE_URL}/conversation/${encodeURIComponent(conversationId)}`,
   )
   const data = response.data as getConversationsResponse;
+
   return data.messages.map((message) => ({
     conversationId: message.conversationId ?? conversationId,
     sender: message.sender as AIMessageRole,
@@ -40,13 +42,14 @@ export const getConversations = async (): Promise<conversation[]> => {
   const response = await axios.get(
     `${API_BASE_URL}/conversations`,
   )
-  console.log("API response for conversations:", response.data);
+
   const data = response.data as getAllConversationsResponse;
-  console.log("Fetched conversations:", data.conversations);
+
   return data.conversations
     .map((item) => ({
       id: item.id,
-      createdAt: new Date(item.createdAt)
+      createdAt: new Date(item.createdAt),
+      firstMessage: item.firstMessage
     }))
     .sort((left, right) => right.createdAt.getTime() - left.createdAt.getTime())
 }

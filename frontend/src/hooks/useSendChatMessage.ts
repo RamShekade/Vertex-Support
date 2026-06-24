@@ -1,103 +1,117 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { AIMessage, AIMessageRole } from 'models/message'
-import { sendChatMessage } from '@/services/apiService'
-import { chatQueryKeys } from './chatQueryKeys'
-import { getErrorMessage } from '@/utils/errorCatcher'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AIMessage, AIMessageRole } from "models/message";
+import { sendChatMessage } from "@/services/apiService";
+import { chatQueryKeys } from "./chatQueryKeys";
+import { getErrorMessage } from "@/utils/errorCatcher";
 
 type SendChatMessageVariables = {
-  message: string
-  conversationId: string | null
-  optimisticConversationId: string
-}
-
-type SendChatMessageContext = {
-  previousMessages: AIMessage[] | undefined
-}
+  message: string;
+  conversationId: string | null;
+  optimisticConversationId: string;
+};
 
 type UseSendChatMessageParams = {
-  onConversationResolved: (conversationId: string) => void
-  onConversationFailed: (message: string, variables: SendChatMessageVariables) => void
-}
+  onConversationResolved: (conversationId: string) => void;
+  onConversationFailed: (
+    message: string,
+    variables: SendChatMessageVariables
+  ) => void;
+};
 
 export const useSendChatMessage = ({
   onConversationResolved,
-  onConversationFailed
+  onConversationFailed,
 }: UseSendChatMessageParams) => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ message, conversationId }: SendChatMessageVariables) => {
-
-      try {
-        return await sendChatMessage(
-          {
-            conversationId: conversationId ?? undefined,
-            message: message
-          }
-        )
-      } catch (error) {
-        throw getErrorMessage(error);
-      }
+    mutationFn: async ({
+      message,
+      conversationId,
+    }: SendChatMessageVariables) => {
+      return sendChatMessage({
+        conversationId: conversationId ?? undefined,
+        message,
+      });
     },
-    onMutate: async (variables): Promise<SendChatMessageContext> => {
-      const queryKey = chatQueryKeys.messages(variables.optimisticConversationId)
 
-      await queryClient.cancelQueries({ queryKey })
+    onMutate: async (variables) => {
+      const queryKey = chatQueryKeys.messages(
+        variables.optimisticConversationId
+      );
 
-      const previousMessages = queryClient.getQueryData<AIMessage[]>(queryKey)
-      const userMessage: AIMessage = {
+      await queryClient.cancelQueries({ queryKey });
+
+      const optimisticMessage: AIMessage = {
         conversationId: variables.optimisticConversationId,
         sender: AIMessageRole.User,
         text: variables.message,
-        createdAt: new Date()
-      }
+        createdAt: new Date(),
+      };
 
-      queryClient.setQueryData<AIMessage[]>(queryKey, (currentMessages = []) => [
-        ...currentMessages,
-        userMessage
-      ])
-
-      return { previousMessages }
+      queryClient.setQueryData<AIMessage[]>(
+        queryKey,
+        (messages = []) => [...messages, optimisticMessage]
+      );
     },
+
     onSuccess: (response, variables) => {
-      const resolvedConversationId = response.conversationId || variables.optimisticConversationId
-      const optimisticQueryKey = chatQueryKeys.messages(variables.optimisticConversationId)
-      const resolvedQueryKey = chatQueryKeys.messages(resolvedConversationId)
-      const currentMessages = queryClient.getQueryData<AIMessage[]>(optimisticQueryKey) ?? []
-      const normalizedMessages = currentMessages.map((message) => ({
-        ...message,
-        conversationId: resolvedConversationId
-      }))
+      const optimisticKey = chatQueryKeys.messages(
+        variables.optimisticConversationId
+      );
+
+      const resolvedConversationId =
+        response.conversationId ||
+        variables.optimisticConversationId;
+
+      const resolvedKey = chatQueryKeys.messages(
+        resolvedConversationId
+      );
+
+      const optimisticMessages =
+        queryClient.getQueryData<AIMessage[]>(
+          optimisticKey
+        ) ?? [];
+
+      const migratedMessages =
+        optimisticMessages.map((message) => ({
+          ...message,
+          conversationId: resolvedConversationId,
+        }));
 
       const assistantMessage: AIMessage = {
         conversationId: resolvedConversationId,
         sender: AIMessageRole.Model,
         text: response.message,
-        createdAt: new Date()
+        createdAt: new Date(),
+      };
+
+      queryClient.setQueryData(
+        resolvedKey,
+        [...migratedMessages, assistantMessage]
+      );
+
+      if (
+        resolvedConversationId !==
+        variables.optimisticConversationId
+      ) {
+        queryClient.removeQueries({
+          queryKey: optimisticKey,
+        });
       }
 
-      queryClient.setQueryData<AIMessage[]>(resolvedQueryKey, [
-        ...normalizedMessages,
-        assistantMessage
-      ])
+      onConversationResolved(resolvedConversationId);
 
-      if (resolvedConversationId !== variables.optimisticConversationId) {
-        queryClient.removeQueries({ queryKey: optimisticQueryKey })
-      }
-
-      onConversationResolved(resolvedConversationId)
-      void queryClient.invalidateQueries({ queryKey: chatQueryKeys.conversations })
+      void queryClient.invalidateQueries({
+        queryKey: chatQueryKeys.conversations,
+      });
     },
-    onError: (error, variables, context) => {
-      const queryKey = chatQueryKeys.messages(variables.optimisticConversationId)
 
-      if (context?.previousMessages) {
-        queryClient.setQueryData(queryKey, context.previousMessages)
-      } else {
-        queryClient.removeQueries({ queryKey })
-      }
-
-      onConversationFailed(getErrorMessage(error), variables)
-    }
-  })
-}
+    onError: (error, variables) => {
+      onConversationFailed(
+        getErrorMessage(error),
+        variables
+      );
+    },
+  });
+};
