@@ -2,7 +2,9 @@
 import express, { Request, Response } from "express";
 import messageRouter from "./routes/message";
 import conversationRouter from "./routes/conversation";
+import { db } from "./db/sqlite";
 import "dotenv/config";
+
 const cors = require("cors");
 const PORT = process.env.PORT || 3000;
 

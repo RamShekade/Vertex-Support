@@ -1,10 +1,9 @@
 type Props = {
-  sessionId: string | null
   isSidebarOpen: boolean
   onToggleSidebar: () => void
 }
 
-const ChatHeader = ({ sessionId, isSidebarOpen, onToggleSidebar }: Props) => (
+const ChatHeader = ({ isSidebarOpen, onToggleSidebar }: Props) => (
   <header className="flex shrink-0 items-center gap-3 border-b border-gray-100 bg-white px-4 py-3.5">
     <button
       type="button"

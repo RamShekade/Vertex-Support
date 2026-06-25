@@ -200,8 +200,6 @@ const ChatComposer = ({
 
         <div className="mt-3 flex items-center justify-between px-2 text-xs text-gray-400">
           <span>🛡 End-to-end encrypted</span>
-
-          <span>Vertex v2.4.1 • Confidence Score: 98%</span>
         </div>
       </div>
     </footer>
