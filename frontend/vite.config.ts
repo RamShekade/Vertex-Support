@@ -11,7 +11,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(rootDirectory, 'src'),
-      models: path.resolve(rootDirectory, '../models')
+      models: path.resolve(rootDirectory, '/models')
     }
   },
   server: {

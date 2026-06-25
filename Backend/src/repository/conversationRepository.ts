@@ -1,8 +1,8 @@
 import { randomUUID } from "crypto";
 import { db } from "../db/sqlite";
-import { AIMessage } from "../../../models/message";
-import { conversation } from "../../../models/conversation";
-import { AIMessageRole } from "../../../models/message";
+import { AIMessage } from "../models/message";
+import { conversation } from "../models/conversation";
+import { AIMessageRole } from "../models/message";
 
 class ConversationRepository {
 

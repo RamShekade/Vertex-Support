@@ -1,6 +1,6 @@
 import Express from "express";
 import { getAllConversations, getConversationMessages } from "../services/conversationData";
-import { conversation } from "../../../models/conversation";
+import { conversation } from "../models/conversation";
 const conversationRouter = Express.Router();
 
 conversationRouter.get("/conversations", async (req, res) => {

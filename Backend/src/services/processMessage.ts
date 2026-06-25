@@ -1,8 +1,8 @@
-import { AIMessage, AIMessageRole } from "../../../models/message";
+import { AIMessage, AIMessageRole } from "../models/message";
 import ConversationRepository from "../repository/conversationRepository";
-import { chatRequest } from "../../../models/api/createChat";
+import { chatRequest } from "../models/api/createChat";
 import { callGemini } from "./callGemini";
-import { AppError } from "../../../models/Errors";
+import { AppError } from "../models/Errors";
 
 const MAX_LENGTH = 5000;
 const repo = new ConversationRepository();

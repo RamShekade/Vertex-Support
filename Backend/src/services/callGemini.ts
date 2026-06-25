@@ -1,7 +1,7 @@
 
 import { GoogleGenAI } from "@google/genai/node";
-import { AIMessage } from "../../../models/message";
-import { AppError, ErrorCode } from "../../../models/Errors";
+import { AIMessage } from "../models/message";
+import { AppError, ErrorCode } from "../models/Errors";
 
 const SYSTEM_PROMPT = `You are a professional and friendly customer support agent for a fictional e-commerce company called Spur Demo Store.
 

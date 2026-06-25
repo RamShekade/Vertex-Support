@@ -1,7 +1,7 @@
 import  Express  from "express";
-import { chatRequest, chatResponse } from "../../../models/api/createChat";
+import { chatRequest, chatResponse } from "../models/api/createChat";
 import { processMessage } from "../services/processMessage";
-import { AppError } from "../../../models/Errors";
+import { AppError } from "../models/Errors";
 
 const router = Express.Router();
 
