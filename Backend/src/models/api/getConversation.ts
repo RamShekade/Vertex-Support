@@ -1,4 +1,4 @@
-import { AIMessage } from "models/message";
+import { AIMessage } from "../message";
 
 export interface getConversationsRequest{
     conversationId: string;
