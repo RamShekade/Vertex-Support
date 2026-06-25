@@ -37,13 +37,8 @@ export const useChat = () => {
     setIsComposingNewChat(false)
   }, [])
 
-  const handleConversationFailed = useCallback((message: string, variables: { conversationId: string | null }) => {
+  const handleConversationFailed = useCallback((message: string) => {
     setError(message)
-
-    if (!variables.conversationId) {
-      setActiveConversationId(null)
-      setIsComposingNewChat(true)
-    }
   }, [])
 
   const sendMutation = useSendChatMessage({

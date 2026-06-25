@@ -13,8 +13,7 @@ type SendChatMessageVariables = {
 type UseSendChatMessageParams = {
   onConversationResolved: (conversationId: string) => void;
   onConversationFailed: (
-    message: string,
-    variables: SendChatMessageVariables
+    message: string
   ) => void;
 };
 
@@ -113,8 +112,7 @@ export const useSendChatMessage = ({
 
     onError: (error, variables) => {
       onConversationFailed(
-        getErrorMessage(error),
-        variables
+        getErrorMessage(error)
       );
     },
   });

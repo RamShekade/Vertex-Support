@@ -1,6 +1,6 @@
 # Vertex-Support
 
-A full-stack AI-powered customer support chat application built as part of the **Spur Founding Full-Stack Engineer Take-Home Assignment**.
+A full-stack AI-powered customer support chat application built as part of the **Spur Take-Home Assignment**.
 
 ## Tech Stack
 
@@ -270,6 +270,7 @@ The application includes several safeguards:
 Given additional time, the following enhancements would be considered:
 
 - caching conversation messges using redis for each conversationId
+- **caching frequently asked prompts by hashing them and use as key at redis this can reduce lot of model calls**
 - Retry support for failed messages.
 - Token usage tracking.
 - PostgreSQL for production deployments.
