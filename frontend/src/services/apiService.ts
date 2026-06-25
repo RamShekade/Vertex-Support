@@ -6,7 +6,7 @@ import { getConversationsResponse } from 'models/api/getConversation'
 import { getAllConversationsResponse } from 'models/api/getAllConversations'
 
 
-const API_BASE_URL = 'http://localhost:3000/api'
+const API_BASE_URL = import.meta.env.API_BASE_URL || 'http://localhost:3000/api'
 
 export const sendChatMessage = async (
   request: chatRequest,
