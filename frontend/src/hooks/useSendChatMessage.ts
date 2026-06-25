@@ -36,25 +36,29 @@ export const useSendChatMessage = ({
     },
 
     onMutate: async (variables) => {
-      const queryKey = chatQueryKeys.messages(
-        variables.optimisticConversationId
-      );
+    const queryKey = chatQueryKeys.messages(
+      variables.optimisticConversationId
+    );
 
-      await queryClient.cancelQueries({ queryKey });
+    await queryClient.cancelQueries({ queryKey });
 
-      const optimisticMessage: AIMessage = {
-        conversationId: variables.optimisticConversationId,
-        sender: AIMessageRole.User,
-        text: variables.message,
-        createdAt: new Date(),
-      };
+    const previous =
+      queryClient.getQueryData<AIMessage[]>(queryKey) ?? [];
 
-      queryClient.setQueryData<AIMessage[]>(
-        queryKey,
-        (messages = []) => [...messages, optimisticMessage]
-      );
-    },
+    const optimisticMessage: AIMessage = {
+      conversationId: variables.optimisticConversationId,
+      sender: AIMessageRole.User,
+      text: variables.message,
+      createdAt: new Date(),
+    };
 
+    queryClient.setQueryData(queryKey, [
+      ...previous,
+      optimisticMessage,
+    ]);
+
+    return { previous };
+  },
     onSuccess: (response, variables) => {
       const optimisticKey = chatQueryKeys.messages(
         variables.optimisticConversationId

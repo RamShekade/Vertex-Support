@@ -9,9 +9,11 @@ export const useConversationMessages = (conversationId: string | null) => {
   const query = useQuery({
     queryKey: conversationId ? chatQueryKeys.messages(conversationId) : ['chat', 'messages', 'idle'],
     queryFn: ({}) => getConversationMessages(conversationId!,),
-    enabled: Boolean(conversationId),
-    staleTime: 10_000
-  })
+    staleTime: 10_000,
+    enabled:
+    Boolean(conversationId) &&
+    !conversationId?.startsWith("temp-")
+    }) 
 
   const messages = query.data ?? []
 

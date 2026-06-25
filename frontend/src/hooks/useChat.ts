@@ -26,8 +26,6 @@ export const useChat = () => {
     if (activeConversationId || isComposingNewChat || conversations.length === 0) {
       return
     }
-
-    setActiveConversationId(conversations[0].id)
   }, [activeConversationId, conversations, isComposingNewChat])
 
   const clearError = useCallback(() => {
@@ -96,7 +94,7 @@ export const useChat = () => {
       return
     }
 
-    const optimisticConversationId = activeConversationId ?? window.crypto.randomUUID()
+    const optimisticConversationId = activeConversationId ?? `temp-${window.crypto.randomUUID()}`
 
     setActiveConversationId(optimisticConversationId)
     setInputValue('')
